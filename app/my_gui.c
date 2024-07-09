@@ -128,9 +128,57 @@ struct my_gui_config_value
     void_u16_fun_ptr_type cfg_update_inform_cb;
 };
 
-char *cfg_freq[] = {"2430MHz", "2440MHz", "2450MHz"};
-char *cfg_rate[] = {"100Kbps","500Kbps","1Mbps"};
-char *cfg_percent[] = {"0\%", "10\%", "20\%", "30\%", "40\%", "50\%", "60\%", "70\%", "80\%", "90\%", "100\%"};
+// user_config start
+void radio_freq_cfg_update_inform_cb(uint16_t index) {
+    LV_LOG_USER("radio_freq index = %d", index);
+    // do your things...
+}
+void radio_rate_cfg_update_inform_cb(uint16_t index) {
+    LV_LOG_USER("radio_rate index = %d", index);
+    // do your things...
+}
+void volume_percent_cfg_update_inform_cb(uint16_t index) {
+    LV_LOG_USER("volume_percent index = %d", index);
+    // do your things...
+}
+void lcd_brightness_percent_cfg_update_inform_cb(uint16_t index) {
+    LV_LOG_USER("lcd_brightness_percent index = %d", index);
+    // do your things...
+}
+
+static char *cfg_freq[] = {"2430MHz", "2440MHz", "2450MHz"};
+static char *cfg_rate[] = {"100Kbps","500Kbps","1Mbps"};
+static char *cfg_percent[] = {"0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"};
+
+static struct my_gui_config_value cfg1 = {
+                                            .cfg_range = ARRAYSIZE(cfg_freq),
+                                            .save_value = 1,
+                                            .show_value = 1,
+                                            .cfg_str = cfg_freq,
+                                            .cfg_update_inform_cb = radio_freq_cfg_update_inform_cb
+                                        };  /* radio_freq */
+static struct my_gui_config_value cfg2 = {
+                                            .cfg_range = ARRAYSIZE(cfg_rate), 
+                                            .save_value = 1, 
+                                            .show_value = 1, 
+                                            .cfg_str = cfg_rate, 
+                                            .cfg_update_inform_cb = radio_rate_cfg_update_inform_cb
+                                        };  /* radio_rate */
+static struct my_gui_config_value cfg3 = {
+                                            .cfg_range = ARRAYSIZE(cfg_percent), 
+                                            .save_value = 5, 
+                                            .show_value = 5, 
+                                            .cfg_str = cfg_percent, 
+                                            .cfg_update_inform_cb = volume_percent_cfg_update_inform_cb
+                                        };  /* volume_percent */
+static struct my_gui_config_value cfg4 = {
+                                            .cfg_range = ARRAYSIZE(cfg_percent), 
+                                            .save_value = 5, 
+                                            .show_value = 5, 
+                                            .cfg_str = cfg_percent, 
+                                            .cfg_update_inform_cb = lcd_brightness_percent_cfg_update_inform_cb
+                                        };  /* brightness_percent */
+// user_config end
 
 static void my_gui_btn_cb(lv_event_t * e)
 {
@@ -296,7 +344,6 @@ static void my_gui_tabview_init(void)
 
     // 创建config值 label
     static lv_obj_t * label1;
-    static struct my_gui_config_value cfg1 = {.cfg_range = ARRAYSIZE(cfg_freq), .save_value = 1, .show_value = 1, .cfg_str = cfg_freq, .cfg_update_inform_cb = NULL};
     label1 = lv_label_create(btn1);
     lv_label_set_text(label1, cfg1.cfg_str[cfg1.show_value]);
     lv_label_set_long_mode(label1, LV_LABEL_LONG_SCROLL_CIRCULAR);
@@ -305,7 +352,6 @@ static void my_gui_tabview_init(void)
     lv_obj_set_user_data(label1, &cfg1); // 将cfg数据关联到label对象，减少全局变量使用
 
     static lv_obj_t * label2;
-    static struct my_gui_config_value cfg2 = {.cfg_range = ARRAYSIZE(cfg_rate), .save_value = 1, .show_value = 1, .cfg_str = cfg_rate, .cfg_update_inform_cb = NULL};
     label2 = lv_label_create(btn2);
     lv_label_set_text(label2, cfg2.cfg_str[cfg2.show_value]);
     lv_label_set_long_mode(label2, LV_LABEL_LONG_SCROLL_CIRCULAR);
@@ -314,7 +360,6 @@ static void my_gui_tabview_init(void)
     lv_obj_set_user_data(label2, &cfg2);
 
     static lv_obj_t * label3;
-    static struct my_gui_config_value cfg3 = {.cfg_range = ARRAYSIZE(cfg_percent), .save_value = 5, .show_value = 5, .cfg_str = cfg_percent, .cfg_update_inform_cb = NULL};
     label3 = lv_label_create(btn3);
     lv_label_set_text(label3, cfg3.cfg_str[cfg3.show_value]);
     lv_label_set_long_mode(label3, LV_LABEL_LONG_SCROLL_CIRCULAR);
@@ -323,7 +368,6 @@ static void my_gui_tabview_init(void)
     lv_obj_set_user_data(label3, &cfg3);
 
     static lv_obj_t * label4;
-    static struct my_gui_config_value cfg4 = {.cfg_range = ARRAYSIZE(cfg_percent), .save_value = 5, .show_value = 5, .cfg_str = cfg_percent, .cfg_update_inform_cb = NULL};
     label4 = lv_label_create(btn4);
     lv_label_set_text(label4, cfg4.cfg_str[cfg4.show_value]);
     lv_label_set_long_mode(label4, LV_LABEL_LONG_SCROLL_CIRCULAR);
